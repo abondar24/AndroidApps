@@ -16,7 +16,7 @@
                   android:padding="5dp"
                   android:layout_margin="5dp"
                   android:orientation="vertical"
-    >
+                  android:id="@+id/linearLayout">
 
 
         <ToggleButton
