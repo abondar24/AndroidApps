@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">UIBasicsDemo</string>
+    <string name="title_activity_check_box">CheckBoxActivity</string>
+</resources>
