@@ -41,18 +41,11 @@
                 android:textOff="Run"
         />
 
-        <Button
+        <TextView
+                android:id="@+id/cmtv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Multi Controls"
-                android:id="@+id/multiControl"
-        />
-
-        <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Time Controls"
-                android:id="@+id/timeControl"
+                android:text="Show context menu"
         />
 
 
