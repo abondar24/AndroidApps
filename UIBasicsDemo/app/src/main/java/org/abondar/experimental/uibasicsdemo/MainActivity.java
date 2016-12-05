@@ -8,6 +8,7 @@ import android.view.*;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import org.abondar.experimental.uibasicsdemo.fragments.FragmentsActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -70,14 +71,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Sample context menu");
-        menu.add(200,200,200 ,"Action bars");
+        menu.add(200,200,200 ,"Fragments");
 
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        Log.v("salo","salo");
+        Intent intent = new Intent(this, FragmentsActivity.class);
+        startActivity(intent);
         return true;
     }
 }

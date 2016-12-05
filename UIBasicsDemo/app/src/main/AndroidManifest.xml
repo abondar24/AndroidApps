@@ -21,6 +21,15 @@
         </activity>
         <activity android:name=".TimeActivity">
         </activity>
+        <activity android:name=".fragments.FragmentsActivity">
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+        </activity>
+        <activity android:name=".fragments.DetailsActivity">
+        </activity>
     </application>
 
 </manifest>
