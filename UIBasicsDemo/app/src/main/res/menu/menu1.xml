@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
 
+
     <group android:id="@+id/menuGroup_Main">
+        <item android:id="@+id/menu_search"
+              android:title="Search"
+              app:showAsAction="ifRoom"
+              app:actionViewClass="android.widget.SearchView"
+        />
         <item
                 android:id="@+id/menu_item1"
                 android:orderInCategory="1"
                 android:title="MultiControls"
+
         />
         <item
+                app:showAsAction="ifRoom"
                 android:id="@+id/menu_item2"
                 android:orderInCategory="2"
                 android:title="TimeControls"
         />
+        <item
+                android:id="@+id/menu_item3"
+                android:orderInCategory="2"
+                android:title="ActionBars"
+        />
+
+
 
     </group>
 </menu>

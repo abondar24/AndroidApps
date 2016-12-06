@@ -1,12 +1,18 @@
 package org.abondar.experimental.uibasicsdemo;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.TextView;
 import org.abondar.experimental.uibasicsdemo.fragments.FragmentsActivity;
 
@@ -26,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         TextView tv =(TextView)this.findViewById(R.id.cmtv);
         registerForContextMenu(tv);
+
+
 
     }
 
@@ -49,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SubMenu sm = menu.addSubMenu(base,base+1,Menu.NONE,"submenu");
         sm.add(base,base+2,base+2,"sub menu item1");
         sm.add(base,base+3,base+3,"sub menu item2");
+        setupSearchView(menu);
 
         return true;
     }
@@ -65,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this, TimeActivity.class);
             startActivity(intent);
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -81,5 +91,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(this, FragmentsActivity.class);
         startActivity(intent);
         return true;
+    }
+
+    private void setupSearchView(Menu menu){
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        ComponentName componentName = new ComponentName(this,SearchResultActivity.class);
+        SearchableInfo info = searchManager.getSearchableInfo(componentName);
+
+        searchView.setSearchableInfo(info);
     }
 }
