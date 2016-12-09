@@ -1,4 +1,4 @@
-package org.abondar.experimental.uibasicsdemo.fragments;
+package org.abondar.experimental.uibasicsdemo.fragmentdemo;
 
 /**
  * Created by abondar on 12/4/16.

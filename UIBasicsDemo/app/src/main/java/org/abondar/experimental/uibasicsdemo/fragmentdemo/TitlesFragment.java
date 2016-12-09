@@ -1,4 +1,4 @@
-package org.abondar.experimental.uibasicsdemo.fragments;
+package org.abondar.experimental.uibasicsdemo.fragmentdemo;
 
 import android.app.Activity;
 import android.app.ListFragment;

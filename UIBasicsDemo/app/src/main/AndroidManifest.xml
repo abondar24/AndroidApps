@@ -21,10 +21,10 @@
         </activity>
         <activity android:name=".TimeActivity">
         </activity>
-        <activity android:name=".fragments.FragmentsActivity">
+        <activity android:name=".fragmentdemo.FragmentsActivity">
 
         </activity>
-        <activity android:name=".fragments.DetailsActivity">
+        <activity android:name=".fragmentdemo.DetailsActivity">
         </activity>
         <activity android:name=".SearchResultActivity">
             <intent-filter>

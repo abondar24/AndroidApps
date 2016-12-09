@@ -1,10 +1,9 @@
-package org.abondar.experimental.uibasicsdemo.fragments;
+package org.abondar.experimental.uibasicsdemo.fragmentdemo;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import org.abondar.experimental.uibasicsdemo.R;
