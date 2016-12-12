@@ -16,34 +16,6 @@
 
             </intent-filter>
         </activity>
-        <activity android:label="@string/category_numbers"
-                  android:name="experimental.abondar.org.miwok2.NumbersActivity"
-                  android:parentActivityName=".MainActivity">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".MainActivity"/>
-        </activity>
-        <activity android:label="@string/category_family"
-                  android:name="experimental.abondar.org.miwok2.FamilyMembersActivity"
-                  android:parentActivityName=".MainActivity">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".MainActivity"/>
-        </activity>
-        <activity android:label="@string/category_colors"
-                  android:name="experimental.abondar.org.miwok2.ColorsActivity"
-                  android:parentActivityName=".MainActivity">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".MainActivity"/>
-        </activity>
-        <activity android:label="@string/category_phrases"
-                  android:name="experimental.abondar.org.miwok2.PhrasesActivity"
-                  android:parentActivityName=".MainActivity">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".MainActivity"/>
-        </activity>
     </application>
 
 </manifest>
