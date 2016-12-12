@@ -76,7 +76,7 @@ public class FamilyMembersFragment extends Fragment {
         members.add( new Word("paapa","grandfather",
                 R.drawable.family_grandfather,R.raw.family_grandfather));
 
-        ListView rootList =(ListView) getActivity().findViewById(R.id.rootList);
+        ListView rootList =(ListView) rootView.findViewById(R.id.rootList);
 
         WordAdapter wordAdapter = new WordAdapter(getActivity(),  members,R.color.category_family);
         rootList.setAdapter(wordAdapter);

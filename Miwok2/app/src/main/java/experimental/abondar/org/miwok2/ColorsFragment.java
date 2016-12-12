@@ -70,7 +70,7 @@ public class ColorsFragment extends Fragment {
                 R.drawable.color_mustard_yellow, R.raw.color_mustard_yellow));
 
 
-        ListView rootList = (ListView) getActivity().findViewById(R.id.rootList);
+        ListView rootList = (ListView) rootView.findViewById(R.id.rootList);
 
         WordAdapter wordAdapter = new WordAdapter(getActivity(), colors, R.color.category_colors);
         rootList.setAdapter(wordAdapter);
