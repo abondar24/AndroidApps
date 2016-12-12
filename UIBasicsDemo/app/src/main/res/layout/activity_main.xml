@@ -39,7 +39,7 @@
                 android:id="@+id/toggleButton"
                 android:text="Toggle"
                 android:textOn="Stop"
-                android:textOff="Run"
+                android:textOff="Play"
         />
 
         <TextView

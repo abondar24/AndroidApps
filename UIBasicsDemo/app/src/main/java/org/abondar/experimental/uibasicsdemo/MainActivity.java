@@ -6,6 +6,7 @@ import android.app.SearchableInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static String HELP_DIALOG_TAG = "HelpDialog";
     public static String ALERT_DIALOG_TAG = "AlertDialog";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,19 +39,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView tv = (TextView) this.findViewById(R.id.cmtv);
         registerForContextMenu(tv);
 
+        ToggleButton tb = (ToggleButton) this.findViewById(R.id.toggleButton);
+
+
+        final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.song);
+
+
+        tb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                   mediaPlayer.start();
+                } else {
+                   mediaPlayer.pause();
+                }
+            }
+        });
+
 
     }
 
     @Override
     public void onClick(View view) {
 
-        if (view.getId() == R.id.textControl) {
-            Intent intent = new Intent(this, TextControlsActivity.class);
-            startActivity(intent);
-        } else if (view.getId() == R.id.imageButton) {
-            Toast.makeText(view.getContext(),"Test1",Toast.LENGTH_SHORT).show();
-            Log.v("Image Button", "SAAAALO");
+        switch (view.getId()){
+            case R.id.textControl:
+                Intent intent = new Intent(this, TextControlsActivity.class);
+                startActivity(intent);
+            case R.id.imageButton:
+                Toast.makeText(view.getContext(),"Test1",Toast.LENGTH_SHORT).show();
+                Log.v("Image Button", "SAAAALO");
         }
+
     }
 
     @Override

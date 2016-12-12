@@ -6,17 +6,26 @@ package experimental.abondar.org.miwok;
 public class Word {
     private String miwokTranslation;
     private String defaultTranslation;
+
     private Integer imageResourceId;
 
-    public Word(String miwokTranslation, String defaultTranslation, Integer imageResourceId) {
+    private boolean isImageSet = false;
+
+    private Integer audioResourceId;
+
+    public Word(String miwokTranslation, String defaultTranslation, Integer imageResourceId, Integer audioResourceId) {
         this.miwokTranslation = miwokTranslation;
         this.defaultTranslation = defaultTranslation;
         this.imageResourceId = imageResourceId;
+        this.isImageSet = true;
+        this.audioResourceId = audioResourceId;
     }
 
-    public Word(String miwokTranslation, String defaultTranslation) {
+
+    public Word(String miwokTranslation, String defaultTranslation, Integer audioResourceId) {
         this.miwokTranslation = miwokTranslation;
         this.defaultTranslation = defaultTranslation;
+        this.audioResourceId = audioResourceId;
     }
 
     public String getMiwokTranslation() {
@@ -41,5 +50,17 @@ public class Word {
 
     public void setImageResourceId(Integer imageResourceId) {
         this.imageResourceId = imageResourceId;
+    }
+
+    public boolean hasImage() {
+        return isImageSet;
+    }
+
+    public Integer getAudioResourceId() {
+        return audioResourceId;
+    }
+
+    public void setAudioResourceId(Integer audioResourceId) {
+        this.audioResourceId = audioResourceId;
     }
 }
