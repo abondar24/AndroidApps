@@ -24,22 +24,7 @@ public class AlertDialogFragment extends DialogFragment
         return adf;
     }
 
-    @Override
-    public void onAttach(Activity act) {
-        // If the activity we're being attached to has
-        // not implemented the OnDialogDoneListener
-        // interface, the following line will throw a
-        // ClassCastException. This is the earliest we
-        // can test if we have a well-behaved activity.
-        try {
-            OnDialogDoneListener test = (OnDialogDoneListener)act;
-        }
-        catch(ClassCastException cce) {
-            // Here is where we fail gracefully.
-          cce.printStackTrace();
-        }
-        super.onAttach(act);
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)

@@ -30,17 +30,7 @@ public class PromptDialogFragment extends DialogFragment implements View.OnClick
         return pdf;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
 
-        try {
-
-            OnDialogDoneListener test = (OnDialogDoneListener) activity;
-
-        } catch (ClassCastException ex) {
-            ex.printStackTrace();
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

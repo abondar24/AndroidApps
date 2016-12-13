@@ -14,12 +14,13 @@ import android.view.*;
 import android.widget.*;
 import org.abondar.experimental.uibasicsdemo.dialogfragments.AlertDialogFragment;
 import org.abondar.experimental.uibasicsdemo.dialogfragments.HelpDialogFragment;
+import org.abondar.experimental.uibasicsdemo.dialogfragments.OnDialogDoneListener;
 import org.abondar.experimental.uibasicsdemo.dialogfragments.PromptDialogFragment;
 import org.abondar.experimental.uibasicsdemo.fragmentdemo.FragmentsActivity;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnDialogDoneListener {
 
-    public static   String PROMPT_DIALOG_TAG = "PromptDialog";
+    public static String PROMPT_DIALOG_TAG = "PromptDialog";
     public static String HELP_DIALOG_TAG = "HelpDialog";
     public static String ALERT_DIALOG_TAG = "AlertDialog";
 
@@ -48,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                   mediaPlayer.start();
+                    mediaPlayer.start();
                 } else {
-                   mediaPlayer.pause();
+                    mediaPlayer.pause();
                 }
             }
         });
@@ -61,12 +62,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
 
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.textControl:
                 Intent intent = new Intent(this, TextControlsActivity.class);
                 startActivity(intent);
             case R.id.imageButton:
-                Toast.makeText(view.getContext(),"Test1",Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Test1", Toast.LENGTH_SHORT).show();
                 Log.v("Image Button", "SAAAALO");
         }
 
@@ -92,21 +93,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.menu_item1:
-                showTime();
-            case R.id.menu_item2:
-                showMultiControl();
-            case 103:
-                showPromptDialog();
-            case 104:
-                showAlertDialog();
-            case 105:
-                showHelpDialog();
-
+        //don't replace for switch - doesn't work
+        if (item.getItemId() == R.id.menu_item1) {
+            showMultiControl();
+        } else if (item.getItemId() == R.id.menu_item2) {
+            showTime();
+        } else if (item.getItemId() == 103) {
+            showPromptDialog();
+        } else if (item.getItemId() == 104) {
+            showAlertDialog();
+        } else if (item.getItemId() == 105) {
+            showHelpDialog();
         }
-
 
         return super.onOptionsItemSelected(item);
     }
