@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static String PROMPT_DIALOG_TAG = "PromptDialog";
     public static String HELP_DIALOG_TAG = "HelpDialog";
     public static String ALERT_DIALOG_TAG = "AlertDialog";
+    private int counter = 0;
 
 
     @Override
@@ -56,7 +57,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        Button startBtn = (Button) this.findViewById(R.id.startBtn);
+        startBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, BackGroundService.class);
+                intent.putExtra("counter", counter++);
+                startService(intent);
+            }
+        });
 
+        Button stopBtn = (Button) this.findViewById(R.id.stopBtn);
+        stopBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                 stopService(new Intent(MainActivity.this,BackGroundService.class));
+            }
+        });
     }
 
     @Override

@@ -49,6 +49,21 @@
                 android:text="Show context menu"
         />
 
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start Service"
+                android:id="@+id/startBtn"
+        />
+
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stop Service"
+                android:id="@+id/stopBtn"
+        />
+
+
 
     </LinearLayout>
 
