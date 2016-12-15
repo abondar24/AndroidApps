@@ -71,9 +71,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         stopBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 stopService(new Intent(MainActivity.this,BackGroundService.class));
+                stopService(new Intent(MainActivity.this,BackGroundService.class));
             }
         });
+
+        Button longTaskBtn = (Button) this.findViewById(R.id.longTaskBtn);
+        longTaskBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                 LongTask lt = new LongTask(MainActivity.this,"Task1");
+                lt.onPreExecute();
+                 lt.execute("ss1","ss2","ss3");
+
+                LongTask1 lt1 = new LongTask1(MainActivity.this,"Task1");
+                lt1.onPreExecute();
+                lt1.execute("ss1","ss2","ss3");
+
+            }
+        });
+
     }
 
     @Override
