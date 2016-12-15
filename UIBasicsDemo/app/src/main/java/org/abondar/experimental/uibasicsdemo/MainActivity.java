@@ -1,8 +1,6 @@
 package org.abondar.experimental.uibasicsdemo;
 
-import android.app.FragmentTransaction;
-import android.app.SearchManager;
-import android.app.SearchableInfo;
+import android.app.*;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +15,8 @@ import org.abondar.experimental.uibasicsdemo.dialogfragments.HelpDialogFragment;
 import org.abondar.experimental.uibasicsdemo.dialogfragments.OnDialogDoneListener;
 import org.abondar.experimental.uibasicsdemo.dialogfragments.PromptDialogFragment;
 import org.abondar.experimental.uibasicsdemo.fragmentdemo.FragmentsActivity;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnDialogDoneListener {
 
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-
+        sendRepeatedAlarm();
     }
 
     @Override
@@ -225,6 +225,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void broadcastIntent(View view){
         Intent intent = new Intent();
-        intent.setAction("com.parse.push.intent.OPEN"); sendBroadcast(intent);
+        intent.setAction("com.parse.push.intent.OPEN");
+        sendBroadcast(intent);
     }
+
+    private void sendRepeatedAlarm(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 14);
+
+        Intent intent = new Intent(this,AlarmReciever.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+
+       alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                1000 * 60 * 5, pendingIntent);
+    }
+
 }
