@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
     }
 
     @Override
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.imageButton:
                 Toast.makeText(view.getContext(), "Test1", Toast.LENGTH_SHORT).show();
                 Log.v("Image Button", "SAAAALO");
+                broadcastIntent(view);
         }
 
     }
@@ -221,4 +223,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    private void broadcastIntent(View view){
+        Intent intent = new Intent();
+        intent.setAction("com.parse.push.intent.OPEN"); sendBroadcast(intent);
+    }
 }

@@ -35,6 +35,14 @@
                     android:resource="@xml/searchable"/>
         </activity>
         <service android:name=".BackGroundService"/>
+        <receiver android:name=".NotificationReciever">
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

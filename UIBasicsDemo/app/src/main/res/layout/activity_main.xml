@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/imageButton"
                 android:src="@drawable/icon"
-                android:onClick="onClickHandler"
+
         />
 
         <ToggleButton
@@ -69,7 +69,6 @@
                 android:text="Run Task"
                 android:id="@+id/longTaskBtn"
         />
-
 
 
     </LinearLayout>
