@@ -7,40 +7,85 @@
 
 >
 
-
     <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="bottom"
-            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/magnitude_tv"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/magnitude_circle"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="sans-serif-medium"
             android:textStyle="bold"
-            android:id="@+id/mag_tv"
             tools:text="7.0"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
 
     />
-    <TextView
+
+    <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:gravity="top"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:id="@+id/location_tv"
-            tools:text="San Francisco"
+            android:orientation="vertical">
+        <TextView
+                android:id="@+id/location_offset_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:textAllCaps="true"
+                android:textColor="@color/textColorEarthquakeDetails"
+                android:textSize="12sp"
+                tools:text="30km S of"
 
-    />
-    <TextView
-            android:layout_width="0dp"
+        />
+        <TextView
+                android:id="@+id/primary_location_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/textColorEarthquakeLocation"
+                android:textSize="16sp"
+                tools:text="San Francisco"
+
+        />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="top"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:id="@+id/date_tv"
-            tools:text="SEP 24, 2012"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+        <TextView
+                android:id="@+id/date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="end"
+                android:textColor="@color/textColorEarthquakeDetails"
+                android:textSize="12sp"
+                tools:text="SEP 24, 2012"
 
-    />
+        />
+        <TextView
+                android:id="@+id/time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="end"
+                android:textColor="@color/textColorEarthquakeDetails"
+                android:textSize="12sp"
+                tools:text="11:30"
 
+        />
 
+    </LinearLayout>
 </LinearLayout>
 
 
