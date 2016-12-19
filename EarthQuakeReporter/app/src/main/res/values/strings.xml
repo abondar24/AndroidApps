@@ -14,6 +14,6 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Earth Quake Reporter</string>
+    <string name="app_name">Earthquake Reporter</string>
     <string name="near_the">Near the</string>
 </resources>
