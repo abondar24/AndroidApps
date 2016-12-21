@@ -52,5 +52,8 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".ScaleActivity">
+        </activity>
     </application>
+
 </manifest>

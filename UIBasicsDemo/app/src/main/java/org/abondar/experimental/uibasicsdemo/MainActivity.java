@@ -144,7 +144,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             showMultiControl();
         } else if (item.getItemId() == R.id.menu_item2) {
             showTime();
-        } else if (item.getItemId() == 103) {
+        } else if (item.getItemId()==R.id.menu_item3){
+            showScale();
+        }else if (item.getItemId() == 103) {
             showPromptDialog();
         } else if (item.getItemId() == 104) {
             showAlertDialog();
@@ -154,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -206,6 +210,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         "Alert Message");
 
         adf.show(ft, ALERT_DIALOG_TAG);
+    }
+
+    private void showScale() {
+        Intent intent = new Intent(this, ScaleActivity.class);
+        startActivity(intent);
     }
 
     private void showPromptDialog() {
