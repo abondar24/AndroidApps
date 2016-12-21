@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static String HELP_DIALOG_TAG = "HelpDialog";
     public static String ALERT_DIALOG_TAG = "AlertDialog";
     private int counter = 0;
-
+    private  VideoView videoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         sendRepeatedAlarm();
+
+        videoView = (VideoView)this.findViewById(R.id.videoView);
+        MediaController mediaController = new MediaController(this);
+        videoView.setMediaController(mediaController);
+        videoView.setVideoURI(Uri.parse("https://youtu.be/rCo7LsuPiCs"));
+//        videoView.requestFocus();
+//        videoView.start();
+//
+
     }
 
     @Override

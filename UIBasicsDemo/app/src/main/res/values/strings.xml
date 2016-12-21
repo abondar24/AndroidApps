@@ -23,5 +23,6 @@
         a dialog. When the user clicks the Close button, the previous
         dialog is re-displayed to them.
     </string>
+    <string name="google_maps_key">AIzaSyBPR8cwKf0UEeeRAZBDeYh0HlB8AxCAxHQ</string>
 
 </resources>
