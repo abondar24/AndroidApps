@@ -1,5 +1,7 @@
 package org.abondar.experimental.androidbasics;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.*;
 import android.content.ComponentName;
 import android.content.Context;
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static String HELP_DIALOG_TAG = "HelpDialog";
     public static String ALERT_DIALOG_TAG = "AlertDialog";
     private int counter = 0;
-    private  VideoView videoView;
+    private VideoView videoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         stopBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stopService(new Intent(MainActivity.this,BackGroundService.class));
+                stopService(new Intent(MainActivity.this, BackGroundService.class));
             }
         });
 
@@ -80,27 +82,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
 
-                 LongTask lt = new LongTask(MainActivity.this,"Task1");
+                LongTask lt = new LongTask(MainActivity.this, "Task1");
                 lt.onPreExecute();
-                 lt.execute("ss1","ss2","ss3");
+                lt.execute("ss1", "ss2", "ss3");
 
-                LongTask1 lt1 = new LongTask1(MainActivity.this,"Task1");
+                LongTask1 lt1 = new LongTask1(MainActivity.this, "Task1");
                 lt1.onPreExecute();
-                lt1.execute("ss1","ss2","ss3");
+                lt1.execute("ss1", "ss2", "ss3");
 
             }
         });
 
         sendRepeatedAlarm();
 
-        videoView = (VideoView)this.findViewById(R.id.videoView);
+        videoView = (VideoView) this.findViewById(R.id.videoView);
         MediaController mediaController = new MediaController(this);
         videoView.setMediaController(mediaController);
 //        videoView.setVideoURI(Uri.parse("https://youtu.be/rCo7LsuPiCs"));
 //        videoView.requestFocus();
 //        videoView.start();
 //
-
     }
 
     @Override
@@ -143,11 +144,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             showMultiControl();
         } else if (item.getItemId() == R.id.menu_item2) {
             showTime();
-        } else if (item.getItemId()==R.id.menu_item3){
+        } else if (item.getItemId() == R.id.menu_item3) {
             showScale();
-        } else if (item.getItemId()==R.id.menu_item4){
+        } else if (item.getItemId() == R.id.menu_item4) {
             showDrag();
-        } else if (item.getItemId()==R.id.menu_item5){
+        } else if (item.getItemId() == R.id.menu_item5) {
             showGravity();
         } else if (item.getItemId() == 103) {
             showPromptDialog();
@@ -159,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     @Override
@@ -244,35 +244,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         hdf.show(ft, HELP_DIALOG_TAG);
     }
 
-    private void showDrag(){
+    private void showDrag() {
         Intent intent = new Intent(this, DragDropActivity.class);
         startActivity(intent);
     }
 
-    private void showGravity(){
+    private void showGravity() {
         Intent intent = new Intent(this, GravityActivity.class);
         startActivity(intent);
     }
 
 
-    private void broadcastIntent(View view){
+    private void broadcastIntent(View view) {
         Intent intent = new Intent();
         intent.setAction("com.parse.push.intent.OPEN");
         sendBroadcast(intent);
     }
 
-    private void sendRepeatedAlarm(){
+    private void sendRepeatedAlarm() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 14);
 
-        Intent intent = new Intent(this,AlarmReciever.class);
+        Intent intent = new Intent(this, AlarmReciever.class);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-        AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
 
-       alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 1000 * 60 * 5, pendingIntent);
     }
 
