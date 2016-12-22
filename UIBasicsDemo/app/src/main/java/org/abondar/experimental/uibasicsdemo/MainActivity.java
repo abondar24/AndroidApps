@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         videoView = (VideoView)this.findViewById(R.id.videoView);
         MediaController mediaController = new MediaController(this);
         videoView.setMediaController(mediaController);
-        videoView.setVideoURI(Uri.parse("https://youtu.be/rCo7LsuPiCs"));
+//        videoView.setVideoURI(Uri.parse("https://youtu.be/rCo7LsuPiCs"));
 //        videoView.requestFocus();
 //        videoView.start();
 //
@@ -146,7 +146,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             showTime();
         } else if (item.getItemId()==R.id.menu_item3){
             showScale();
-        }else if (item.getItemId() == 103) {
+        } else if (item.getItemId()==R.id.menu_item4){
+            showDrag();
+        } else if (item.getItemId() == 103) {
             showPromptDialog();
         } else if (item.getItemId() == 104) {
             showAlertDialog();
@@ -239,6 +241,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ft.addToBackStack(HELP_DIALOG_TAG);
         hdf.show(ft, HELP_DIALOG_TAG);
+    }
+
+    private void showDrag(){
+        Intent intent = new Intent(this, DragDropActivity.class);
+        startActivity(intent);
     }
 
 

@@ -54,6 +54,8 @@
 
         <activity android:name=".ScaleActivity">
         </activity>
+        <activity android:name=".DragDropActivity">
+        </activity>
     </application>
 
 </manifest>
