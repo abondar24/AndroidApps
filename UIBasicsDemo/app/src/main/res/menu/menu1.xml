@@ -25,13 +25,18 @@
         />
         <item
                 android:id="@+id/menu_item3"
-                android:orderInCategory="2"
+                android:orderInCategory="3"
                 android:title="Scale"
         />
         <item
                 android:id="@+id/menu_item4"
-                android:orderInCategory="2"
+                android:orderInCategory="4"
                 android:title="Drag and Drop"
+        />
+        <item
+                android:id="@+id/menu_item5"
+                android:orderInCategory="5"
+                android:title="Gravity Demo"
         />
 
 

@@ -8,7 +8,7 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
+    <uses-feature android:required="true" android:name="android.hardware.sensor.accelerometer" />
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -55,6 +55,8 @@
         <activity android:name=".ScaleActivity">
         </activity>
         <activity android:name=".DragDropActivity">
+        </activity>
+        <activity android:name=".GravityActivity">
         </activity>
     </application>
 

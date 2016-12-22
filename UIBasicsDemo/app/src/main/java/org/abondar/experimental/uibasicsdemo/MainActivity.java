@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -148,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             showScale();
         } else if (item.getItemId()==R.id.menu_item4){
             showDrag();
+        } else if (item.getItemId()==R.id.menu_item5){
+            showGravity();
         } else if (item.getItemId() == 103) {
             showPromptDialog();
         } else if (item.getItemId() == 104) {
@@ -245,6 +246,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showDrag(){
         Intent intent = new Intent(this, DragDropActivity.class);
+        startActivity(intent);
+    }
+
+    private void showGravity(){
+        Intent intent = new Intent(this, GravityActivity.class);
         startActivity(intent);
     }
 
