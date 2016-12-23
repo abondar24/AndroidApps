@@ -1,5 +1,7 @@
 package org.abondar.experimental.pets;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,10 +9,9 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.*;
+import org.abondar.experimental.pets.data.PetContract.PetEntry;
+import org.abondar.experimental.pets.data.PetDbHelper;
 
 public class EditorActivity extends AppCompatActivity {
 
@@ -18,7 +19,8 @@ public class EditorActivity extends AppCompatActivity {
     private EditText breedEditText;
     private EditText weightEditText;
     private Spinner genderSpinner;
-    private int gender = 0;
+    private int gender = PetEntry.GENDER_UNKNOWN;
+    private PetDbHelper petDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class EditorActivity extends AppCompatActivity {
         genderSpinner = (Spinner) this.findViewById(R.id.spinner_gender);
 
         setupSpinner();
+        petDbHelper = new PetDbHelper(this);
     }
 
     @Override
@@ -43,6 +46,8 @@ public class EditorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
+                insertPet();
+                finish();
                 return true;
             case R.id.action_delete:
                 return true;
@@ -67,20 +72,42 @@ public class EditorActivity extends AppCompatActivity {
                 String selection = (String) parent.getItemAtPosition(pos);
                 if (!TextUtils.isEmpty(selection)) {
                     if (selection.equals(getString(R.string.gender_male))) {
-                        gender = 1;
+                        gender = PetEntry.GENDER_MALE;
                     } else if (selection.equals(getString(R.string.gender_female))) {
-                        gender = 2;
+                        gender = PetEntry.GENDER_FEMALE;
                     } else {
-                        gender = 0;
+                        gender = PetEntry.GENDER_UNKNOWN;
                     }
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                gender = 0;
+                gender = PetEntry.GENDER_UNKNOWN;
             }
         });
 
+    }
+
+    private void insertPet () {
+        SQLiteDatabase db = petDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        String name = nameEditText.getText().toString().trim();
+        String breed = breedEditText.getText().toString().trim();
+        int weight = Integer.valueOf(weightEditText.getText().toString().trim());
+        values.put(PetEntry.COLUMN_PET_NAME, name);
+        values.put(PetEntry.COLUMN_PET_BREED, breed);
+        values.put(PetEntry.COLUMN_PET_GENDER, gender);
+        values.put(PetEntry.COLUMN_PET_WEIGHT, weight);
+
+        long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
+
+        if (newRowId == -1) {
+            Toast.makeText(this, "Error with saving pet", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Pet saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+
+        }
     }
 }
