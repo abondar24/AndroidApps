@@ -8,6 +8,10 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <provider
+                android:name=".data.PetProvider"
+                android:authorities="org.abondar.experimental.pets"
+                android:exported="false" />
         <activity android:name=".CatalogActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

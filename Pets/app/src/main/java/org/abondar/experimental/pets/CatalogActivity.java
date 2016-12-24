@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,12 +12,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import org.abondar.experimental.pets.data.PetContract;
 import org.abondar.experimental.pets.data.PetContract.PetEntry;
 import org.abondar.experimental.pets.data.PetDbHelper;
 
 
 public class CatalogActivity extends AppCompatActivity {
-    private PetDbHelper petDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,6 @@ public class CatalogActivity extends AppCompatActivity {
             }
         });
 
-        petDbHelper = new PetDbHelper(this);
         displayDatabaseInfo();
     }
 
@@ -63,16 +63,14 @@ public class CatalogActivity extends AppCompatActivity {
 
     private void displayDatabaseInfo() {
 
-        SQLiteDatabase db = petDbHelper.getReadableDatabase();
-
         String[] projection = {PetEntry._ID,
                 PetEntry.COLUMN_PET_NAME,
                 PetEntry.COLUMN_PET_GENDER,
                 PetEntry.COLUMN_PET_BREED,
                 PetEntry.COLUMN_PET_WEIGHT};
 
-        Cursor cursor = db.query(PetEntry.TABLE_NAME,
-                projection, null, null, null, null, null);
+      Cursor cursor = getContentResolver().query(PetEntry.CONTENT_URI,projection,
+              null,null,null);
 
         TextView displayView = (TextView) findViewById(R.id.text_view_pet);
 
@@ -112,7 +110,6 @@ public class CatalogActivity extends AppCompatActivity {
     }
 
     private void insertPet() {
-        SQLiteDatabase db = petDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, "Toto");
@@ -120,6 +117,6 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_MALE);
         values.put(PetEntry.COLUMN_PET_WEIGHT, 7);
 
-        long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
+        Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
     }
 }
