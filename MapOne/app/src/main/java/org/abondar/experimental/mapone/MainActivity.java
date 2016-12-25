@@ -1,5 +1,6 @@
 package org.abondar.experimental.mapone;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -101,6 +102,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                    .strokeColor(Color.BLACK)
                    .fillColor(Color.argb(64,0,255,0)));
                 }
+            }
+        });
+
+        Button streetButton = (Button) this.findViewById(R.id.street_button);
+        streetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, StreetViewActivity.class);
+                startActivity(intent);
             }
         });
 

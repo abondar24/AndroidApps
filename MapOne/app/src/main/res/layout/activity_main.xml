@@ -61,6 +61,13 @@
                 android:layout_weight="1"
                 android:text="Draw Line"/>
 
+        <Button
+                android:id="@+id/street_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Go street"/>
+
     </LinearLayout>
     <fragment
                 android:id="@+id/map"
