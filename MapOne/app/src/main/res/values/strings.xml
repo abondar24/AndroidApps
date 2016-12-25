@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MapOne</string>
+    <string name="default_move">Change Position</string>
+    <string name="back_move">Go Back</string>
 </resources>

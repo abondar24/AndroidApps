@@ -11,35 +11,58 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             tools:context="org.abondar.experimental.mapone.MainActivity">
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+        <Button
+                android:id="@+id/map_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-        >
-            <Button
-                    android:id="@+id/map_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Map"/>
-            <Button
-                    android:id="@+id/satellite_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Satellite"/>
-            <Button
-                    android:id="@+id/hybrid_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Hybrid"/>
+                android:layout_weight="1"
+                android:text="Map"/>
+        <Button
+                android:id="@+id/satellite_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Satellite"/>
+        <Button
+                android:id="@+id/hybrid_button"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hybrid"/>
 
-        </LinearLayout>
-        <fragment
+
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+        <Button
+                android:id="@+id/move_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/default_move"/>
+
+        <Button
+                android:id="@+id/triangle_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Draw Line"/>
+
+    </LinearLayout>
+    <fragment
                 android:id="@+id/map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
