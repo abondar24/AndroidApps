@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_location"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="org.abondar.experimental.mapone.LocationActivity">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    android:layout_marginTop="16dp">
+        <TextView
+                android:id="@+id/last_latitude_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Last Latitude:"
+                android:textSize="16dp" />
+        <TextView
+                android:id="@+id/last_latitude_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/last_latitude_label"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/last_latitude_label"
+                android:textIsSelectable="true"
+                android:text="Latitude Goes Here"
+                android:textSize="16dp" />
+        <TextView
+                android:id="@+id/last_longitude_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Last Longitude:"
+                android:layout_marginTop="24dp"
+                android:textSize="16dp" />
+        <TextView
+                android:id="@+id/last_longitude_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/last_longitude_label"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/last_longitude_label"
+                android:textIsSelectable="true"
+                android:layout_marginTop="24dp"
+                android:text="Longitude Goes Here"
+                android:textSize="16dp"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+        <TextView
+                android:id="@+id/current_latitude_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Current Latitude:"
+                android:textSize="16dp" />
+        <TextView
+                android:id="@+id/current_latitude_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/current_latitude_label"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/current_latitude_label"
+                android:textIsSelectable="true"
+                android:text="Latitude Goes Here"
+                android:textSize="16dp" />
+        <TextView
+                android:id="@+id/current_longitude_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Current Longitude:"
+                android:layout_marginTop="24dp"
+                android:textSize="16dp" />
+        <TextView
+                android:id="@+id/current_longitude_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/current_longitude_label"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/current_longitude_label"
+                android:textIsSelectable="true"
+                android:layout_marginTop="24dp"
+                android:text="Longitude Goes Here"
+                android:textSize="16dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+        <Button
+                android:id="@+id/request_activity_updates_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:onClick="requestActivityUpdatesButtonHandler"
+                android:text="@string/request_activity_updates" />
+
+        <Button
+                android:id="@+id/remove_activity_updates_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:onClick="removeActivityUpdatesButtonHandler"
+                android:text="@string/remove_activity_updates" />
+
+        <TextView
+                android:id="@+id/detectedActivities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/request_activity_updates_button"
+                android:text="@string/detected_activities_title"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

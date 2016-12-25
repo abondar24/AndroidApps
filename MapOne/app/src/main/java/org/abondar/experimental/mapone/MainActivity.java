@@ -1,11 +1,17 @@
 package org.abondar.experimental.mapone;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -96,26 +102,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .add(sjc18));
 
                 } else {
-                   map.addCircle(new CircleOptions()
-                   .center(moscow)
-                   .radius(150)
-                   .strokeColor(Color.BLACK)
-                   .fillColor(Color.argb(64,0,255,0)));
+                    map.addCircle(new CircleOptions()
+                            .center(moscow)
+                            .radius(150)
+                            .strokeColor(Color.BLACK)
+                            .fillColor(Color.argb(64, 0, 255, 0)));
                 }
             }
         });
 
-        Button streetButton = (Button) this.findViewById(R.id.street_button);
-        streetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, StreetViewActivity.class);
-                startActivity(intent);
-            }
-        });
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.street_view:
+                Intent intent = new Intent(MainActivity.this, StreetViewActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.location:
+                Intent intent1 = new Intent(MainActivity.this, LocationActivity.class);
+                startActivity(intent1);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
