@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
-
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,11 +24,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.*;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class LocationActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener,ResultCallback<Status> {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status> {
 
     private final String TAG = "Location";
     private TextView lastLatTextView;
@@ -39,9 +40,11 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
     private TextView statusTextView;
     private Button requestUpdatesButton;
     private Button removeUpdatesButton;
+    private Button geofenceButton;
 
-    protected ActivityDetectionBroadcastReceiver broadcastReceiver;
-    protected GoogleApiClient googleApiClient;
+    private ArrayList<Geofence> geofenceList;
+    private ActivityDetectionBroadcastReceiver broadcastReceiver;
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -56,6 +59,8 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
                 .addApi(ActivityRecognition.API)
                 .build();
 
+        geofenceList = new ArrayList<>();
+        populateGeofenceList();
 
         lastLatTextView = (TextView) this.findViewById(R.id.last_latitude_text);
         lastLonTextView = (TextView) this.findViewById(R.id.last_longitude_text);
@@ -68,8 +73,8 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
         requestUpdatesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!googleApiClient.isConnected()){
-                    Toast.makeText(LocationActivity.this,getString(R.string.not_connected),
+                if (!googleApiClient.isConnected()) {
+                    Toast.makeText(LocationActivity.this, getString(R.string.not_connected),
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -83,13 +88,12 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
         });
 
 
-
-        removeUpdatesButton = (Button) findViewById(R.id.remove_activity_updates_button);
+        removeUpdatesButton = (Button) this.findViewById(R.id.remove_activity_updates_button);
         removeUpdatesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!googleApiClient.isConnected()){
-                    Toast.makeText(LocationActivity.this,getString(R.string.not_connected),
+                if (!googleApiClient.isConnected()) {
+                    Toast.makeText(LocationActivity.this, getString(R.string.not_connected),
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -99,6 +103,35 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
                 removeUpdatesButton.setEnabled(false);
             }
         });
+
+        geofenceButton = (Button) this.findViewById(R.id.geofence_button);
+        geofenceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!googleApiClient.isConnected()) {
+                    Toast.makeText(LocationActivity.this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (ActivityCompat.checkSelfPermission(LocationActivity.this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                                LocationActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 108);
+
+                }
+                LocationServices.GeofencingApi.addGeofences(
+                        googleApiClient,
+                        getGeofencingRequest(),
+                        getGeofencePendingIntent()
+                ).setResultCallback(LocationActivity.this);
+
+
+
+            }
+        });
+
     }
 
 
@@ -117,7 +150,7 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     @Override
-    protected  void onPause(){
+    protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         super.onPause();
     }
@@ -201,9 +234,13 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
     public void onResult(@NonNull Status status) {
         if (status.isSuccess()) {
             Log.e(TAG, "Successfully added activity detection.");
+            Toast.makeText(this,"Geofences Added",Toast.LENGTH_SHORT).show();
 
         } else {
             Log.e(TAG, "Error adding or removing activity detection: " + status.getStatusMessage());
+
+            String errorMsg = GeofenceErrorMessages.getErrorString(this,status.getStatusCode());
+            Log.e(TAG,errorMsg);
         }
     }
 
@@ -216,16 +253,46 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
                     intent.getParcelableArrayListExtra(Constants.ACTIVITY_EXTRA);
 
             String strStatus = "";
-            for (DetectedActivity thisActivity: updatedActivites){
+            for (DetectedActivity thisActivity : updatedActivites) {
                 strStatus += getActivityString(thisActivity.getType()) + thisActivity.getConfidence() + "%\n";
             }
             statusTextView.setText(strStatus);
         }
     }
 
-    public PendingIntent getActivityDetectionPendingIntent(){
-        Intent intent = new Intent(this,DetectedActivityIntentService.class);
+    public PendingIntent getActivityDetectionPendingIntent() {
+        Intent intent = new Intent(this, DetectedActivityIntentService.class);
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public void populateGeofenceList() {
+        for (Map.Entry<String, LatLng> entry : Constants.LANDMARKS.entrySet()) {
+            geofenceList.add(new Geofence.Builder()
+                    .setRequestId(entry.getKey())
+                    .setCircularRegion(
+                            entry.getValue().latitude,
+                            entry.getValue().longitude,
+                            Constants.GEOFENCE_RADIUS_IN_METERS)
+                    .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .build());
+
+        }
+    }
+
+    public PendingIntent getGeofencePendingIntent(){
+        Intent intent = new Intent(this,GeofenceTransitionsIntentService.class);
         return PendingIntent.getService(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
     }
+
+    private GeofencingRequest getGeofencingRequest(){
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.addGeofences(geofenceList);
+
+        return builder.build();
+    }
+
 
 }

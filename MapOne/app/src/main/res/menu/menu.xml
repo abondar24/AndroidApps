@@ -15,5 +15,4 @@
             android:id="@+id/location"
             android:title="Location Services"
             app:showAsAction="never"/>
-
 </menu>

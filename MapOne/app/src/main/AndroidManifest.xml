@@ -41,9 +41,12 @@
         </activity>
         <activity android:name=".LocationActivity">
         </activity>
+
         <service
                 android:name=".DetectedActivityIntentService"
-                android:exported="false" />
+                android:exported="false"/>
+        <service android:name=".GeofenceTransitionsIntentService"/>
+
     </application>
 
 </manifest>
