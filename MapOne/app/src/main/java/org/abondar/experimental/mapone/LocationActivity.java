@@ -232,7 +232,7 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
 
     @Override
     public void onResult(@NonNull Status status) {
-        if (status.isSuccess()) {
+        if (status.isSuccess() ) {
             Log.e(TAG, "Successfully added activity detection.");
             Toast.makeText(this,"Geofences Added",Toast.LENGTH_SHORT).show();
 
