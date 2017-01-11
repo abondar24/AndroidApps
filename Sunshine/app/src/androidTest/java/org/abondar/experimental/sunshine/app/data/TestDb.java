@@ -12,8 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -24,13 +22,13 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 public class TestDb {
-    static final String TEST_LOCATION = "99705";
-    static final long TEST_DATE = 1419033600L;  // December 20th, 2014
+    private static final String TEST_LOCATION = "99705";
+    private static final long TEST_DATE = 1419033600L;  // December 20th, 2014
 
-    Context appContext = InstrumentationRegistry.getTargetContext();
+    private Context appContext = InstrumentationRegistry.getTargetContext();
 
 
-    void deleteTheDataBase() {
+    private void deleteTheDataBase() {
         appContext.deleteDatabase(WeatherDbHelper.DATABASE_NAME);
     }
 
@@ -106,7 +104,7 @@ public class TestDb {
         WeatherDbHelper dbHelper = new WeatherDbHelper(appContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        ContentValues weatherValues = createWeatherValues(locationRowId);
+        ContentValues weatherValues = TestUtilities.createWeatherValues(locationRowId);
 
         long weatherRowId = db.insert(WeatherContract.WeatherEntry.TABLE_NAME, null, weatherValues);
         assertTrue(weatherRowId != -1);
@@ -123,7 +121,7 @@ public class TestDb {
 
         assertTrue("Error: No Records returned from location query", weatherCursor.moveToFirst());
 
-        validateCurrentRecord("testInsertReadDb weatherEntry failed to validate",
+        TestUtilities.validateCurrentRecord("testInsertReadDb weatherEntry failed to validate",
                 weatherCursor, weatherValues);
 
         assertFalse("Error: More than one record returned from weather query",
@@ -133,51 +131,11 @@ public class TestDb {
         dbHelper.close();
     }
 
-    static void validateCurrentRecord(String error, Cursor valueCursor, ContentValues expectedValues) {
-        Set<Map.Entry<String, Object>> valueSet = expectedValues.valueSet();
-        for (Map.Entry<String, Object> entry : valueSet) {
-            String columnName = entry.getKey();
-            int idx = valueCursor.getColumnIndex(columnName);
-            assertFalse("Column '" + columnName + "' not found. " + error, idx == -1);
-            String expectedValue = entry.getValue().toString();
-            assertEquals("Value '" + entry.getValue().toString() +
-                    "' did not match the expected value '" +
-                    expectedValue + "'. " + error, expectedValue, valueCursor.getString(idx));
-        }
-    }
-
-    static ContentValues createNorthPoleLocationValues() {
-        // Create a new map of values, where column names are the keys
-        ContentValues testValues = new ContentValues();
-        testValues.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING, TEST_LOCATION);
-        testValues.put(WeatherContract.LocationEntry.COLUMN_CITY_NAME, "North Pole");
-        testValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT, 64.7488);
-        testValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG, -147.353);
-
-        return testValues;
-    }
-
-    static ContentValues createWeatherValues(long locationRowId) {
-        ContentValues weatherValues = new ContentValues();
-        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_LOC_KEY, locationRowId);
-        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DATE, TEST_DATE);
-        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DEGREES, 1.1);
-        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_HUMIDITY, 1.2);
-        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_PRESSURE, 1.3);
-        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP, 75);
-        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP, 65);
-        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC, "Asteroids");
-        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WIND_SPEED, 5.5);
-        weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID, 321);
-
-        return weatherValues;
-    }
-
 
     public long insertLocation() {
         WeatherDbHelper dbHelper = new WeatherDbHelper(appContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues testValues = createNorthPoleLocationValues();
+        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
 
         long locationRowId;
         locationRowId = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, testValues);
@@ -194,7 +152,7 @@ public class TestDb {
         );
 
         assertTrue("Error: No Records returned from location query", cursor.moveToFirst());
-        validateCurrentRecord("Error: Location Query Validation Failed",
+        TestUtilities.validateCurrentRecord("Error: Location Query Validation Failed",
                 cursor, testValues);
 
         assertFalse("Error: More than one record returned from location query", cursor.moveToNext());
@@ -203,4 +161,5 @@ public class TestDb {
 
         return locationRowId;
     }
+
 }
