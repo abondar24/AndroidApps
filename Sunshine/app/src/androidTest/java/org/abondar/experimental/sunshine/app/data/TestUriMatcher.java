@@ -22,7 +22,7 @@ public class TestUriMatcher {
     private static final Uri TEST_WEATHER_DIR = WeatherContract.WeatherEntry.CONTENT_URI;
     private static final Uri TEST_WEATHER_WITH_LOCATION_DIR = WeatherContract.WeatherEntry.buildWeatherLocation(LOCATION_QUERY);
     private static final Uri TEST_WEATHER_WITH_LOCATION_AND_DATE_DIR = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(LOCATION_QUERY, TEST_DATE);
-    // content://com.example.android.sunshine.app/location"
+    // content://org.abondar.experimental.sunshine/location"
     private static final Uri TEST_LOCATION_DIR = WeatherContract.LocationEntry.CONTENT_URI;
 
     @Test

@@ -1,4 +1,4 @@
-package org.abondar.experimental.sunshine.app.data;
+package org.abondar.experimental.sunshine.app;
 
 import android.annotation.TargetApi;
 import android.content.Context;

@@ -18,7 +18,7 @@ import org.abondar.experimental.sunshine.data.WeatherContract.WeatherEntry;
 import org.abondar.experimental.sunshine.data.WeatherContract.LocationEntry;
 import org.abondar.experimental.sunshine.data.WeatherDbHelper;
 import org.abondar.experimental.sunshine.data.WeatherProvider;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertEquals;
@@ -33,13 +33,14 @@ public class TestProvider {
 
     private Context appContext = InstrumentationRegistry.getTargetContext();
 
-    private static  final int BULK_INSERT_RECORDS_TO_INSERT = 10;
+    private static final int BULK_INSERT_RECORDS_TO_INSERT = 10;
+
     private static ContentValues[] createBulkInsertWeatherValues(long locationRowId) {
         long currentTestDate = TestUtilities.TEST_DATE;
-        long millisecondsInADay = 1000*60*60*24;
+        long millisecondsInADay = 1000 * 60 * 60 * 24;
         ContentValues[] returnContentValues = new ContentValues[BULK_INSERT_RECORDS_TO_INSERT];
 
-        for ( int i = 0; i < BULK_INSERT_RECORDS_TO_INSERT; i++, currentTestDate+= millisecondsInADay ) {
+        for (int i = 0; i < BULK_INSERT_RECORDS_TO_INSERT; i++, currentTestDate += millisecondsInADay) {
             ContentValues weatherValues = new ContentValues();
             weatherValues.put(WeatherContract.WeatherEntry.COLUMN_LOC_KEY, locationRowId);
             weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DATE, currentTestDate);
@@ -56,14 +57,10 @@ public class TestProvider {
         return returnContentValues;
     }
 
-    @Test
-    public void setUp() {
-        deleteAllRecords();
-    }
 
 
-    @Test
-    public void deleteAllRecordsFromProvider() {
+    @Before
+    public  void deleteAllRecordsFromProvider() {
         appContext.getContentResolver().delete(
                 WeatherEntry.CONTENT_URI,
                 null,
@@ -152,7 +149,8 @@ public class TestProvider {
         WeatherDbHelper dbHelper = new WeatherDbHelper(appContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
+        TestUtilities.createNorthPoleLocationValues();
+
         long locationRowId = TestUtilities.insertNorthPoleLocationValues(appContext);
 
         // Fantastic.  Now that we have a location, add some weather!
@@ -363,7 +361,7 @@ public class TestProvider {
 
         assertTrue(locationRowId != -1);
 
-        Cursor cursor =appContext.getContentResolver().query(
+        Cursor cursor = appContext.getContentResolver().query(
                 LocationEntry.CONTENT_URI,
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
@@ -397,25 +395,12 @@ public class TestProvider {
         assertEquals(cursor.getCount(), BULK_INSERT_RECORDS_TO_INSERT);
 
         cursor.moveToFirst();
-        for ( int i = 0; i < BULK_INSERT_RECORDS_TO_INSERT; i++, cursor.moveToNext() ) {
+        for (int i = 0; i < BULK_INSERT_RECORDS_TO_INSERT; i++, cursor.moveToNext()) {
             TestUtilities.validateCurrentRecord("testBulkInsert.  Error validating WeatherEntry " + i,
                     cursor, bulkInsertContentValues[i]);
         }
         cursor.close();
     }
 
-    private void deleteAllRecordsFromDB() {
-        WeatherDbHelper dbHelper = new WeatherDbHelper(appContext);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        db.delete(WeatherEntry.TABLE_NAME, null, null);
-        db.delete(LocationEntry.TABLE_NAME, null, null);
-        db.close();
-    }
-
-
-    private void deleteAllRecords() {
-        deleteAllRecordsFromDB();
-    }
 
 }

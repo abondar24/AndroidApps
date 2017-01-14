@@ -1,7 +1,5 @@
 package org.abondar.experimental.sunshine.app;
 
-import android.test.suitebuilder.TestSuiteBuilder;
-import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.abondar.experimental.sunshine.app.data.*;
 import org.junit.runner.RunWith;

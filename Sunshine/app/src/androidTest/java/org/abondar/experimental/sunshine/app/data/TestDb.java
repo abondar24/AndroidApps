@@ -8,6 +8,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import org.abondar.experimental.sunshine.data.WeatherContract;
 import org.abondar.experimental.sunshine.data.WeatherDbHelper;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,19 +24,14 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 public class TestDb {
-    private static final String TEST_LOCATION = "99705";
-    private static final long TEST_DATE = 1419033600L;  // December 20th, 2014
 
-    private Context appContext = InstrumentationRegistry.getTargetContext();
+    private  Context appContext = InstrumentationRegistry.getTargetContext();
 
 
-    private void deleteTheDataBase() {
+
+    @Before
+    public  void setUp() {
         appContext.deleteDatabase(WeatherDbHelper.DATABASE_NAME);
-    }
-
-    @Test
-    public void setUp() {
-        deleteTheDataBase();
     }
 
     @Test

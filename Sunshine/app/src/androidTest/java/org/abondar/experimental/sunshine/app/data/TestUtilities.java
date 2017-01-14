@@ -8,9 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.test.runner.AndroidJUnit4;
+import android.test.AndroidTestCase;
 import org.abondar.experimental.sunshine.app.utils.PollingCheck;
 import org.abondar.experimental.sunshine.data.WeatherContract;
 import org.abondar.experimental.sunshine.data.WeatherDbHelper;
+import org.junit.runner.RunWith;
 
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +30,9 @@ public class TestUtilities {
     static final String TEST_LOCATION = "99705";
     static final long TEST_DATE = 1419033600L;  // December 20th, 2014
 
+
     static void validateCursor(String error, Cursor valueCursor, ContentValues expectedValues) {
+        assertTrue("Empty cursor returned. " + error, valueCursor.moveToFirst());
         validateCurrentRecord(error, valueCursor, expectedValues);
         valueCursor.close();
     }
@@ -44,7 +49,6 @@ public class TestUtilities {
                     expectedValue + "'. " + error, expectedValue, valueCursor.getString(idx));
         }
     }
-
 
     static ContentValues createWeatherValues(long locationRowId) {
         ContentValues weatherValues = new ContentValues();
