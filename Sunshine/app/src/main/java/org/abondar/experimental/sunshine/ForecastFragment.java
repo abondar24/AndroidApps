@@ -1,7 +1,6 @@
 package org.abondar.experimental.sunshine;
 
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +19,10 @@ import org.abondar.experimental.sunshine.data.WeatherContract;
  * Created by abondar on 1/7/17.
  */
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    public interface Callback {
+        public void onItemSelected(Uri dataUri);
+    }
 
     private static final int FORECAST_LOADER = 0;
     private static final String[] FORECAST_COLUMNS = {
@@ -44,6 +47,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_COORD_LONG = 8;
 
     private ForecastAdapter adapter;
+    private ListView listView;
+    private int position = ListView.INVALID_POSITION;
+    private static final String SELECTED_KEY = "selected_position";
+    private boolean useTodayLayout;
 
     public ForecastFragment() {
     }
@@ -59,22 +66,36 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                              Bundle savedInstanceState) {
 
         adapter = new ForecastAdapter(getActivity(), null, 0);
-        View rootView = inflater.inflate(R.layout.fragment_forecast, container, false);
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                if (cursor !=null){
-                    String locationString = Utility.getPreferredLocation(getActivity());
-                    Intent intent = new Intent(getActivity(),DetailActivity.class)
-                            .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                                    locationString, cursor.getLong(COL_WEATHER_DATE)));
-                    startActivity(intent);
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(pos);
+                if (cursor != null) {
+                    String locationSetting = Utility.getPreferredLocation(getActivity());
+                    ((Callback) getActivity())
+                            .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
+                            ));
+
+
                 }
+                position = pos;
             }
         });
+
+        // If there's instance state, mine it for useful information.
+        // The end-goal here is that the user never knows that turning their device sideways
+        // does crazy lifecycle related things.  It should feel like some stuff stretched out,
+        // or magically appeared to take advantage of room, but data or place in the app was never
+        // actually *lost*.
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            position = savedInstanceState.getInt(SELECTED_KEY);
+        }
+
+        adapter.setUseTodayLayout(useTodayLayout);
 
         return rootView;
     }
@@ -84,7 +105,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         getLoaderManager().initLoader(FORECAST_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
-
 
 
     @Override
@@ -103,6 +123,19 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // When tablets rotate, the currently selected list item needs to be saved.
+        // When no item is selected, position will be set to Listview.INVALID_POSITION,
+        // so check for that before storing.
+        if (position != ListView.INVALID_POSITION) {
+            outState.putInt(SELECTED_KEY, position);
+        }
+        super.onSaveInstanceState(outState);
+
+    }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -124,6 +157,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         adapter.swapCursor(cursor);
+        if (position != ListView.INVALID_POSITION) {
+            listView.smoothScrollToPosition(position);
+        }
     }
 
     @Override
@@ -131,9 +167,18 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         adapter.swapCursor(null);
     }
 
-    public  void onLocationChanged(){
-       updateWeather();
-       getLoaderManager().restartLoader(FORECAST_LOADER,null,this);
+    public void setUseTodayLayout(boolean useTodayLayout) {
+        this.useTodayLayout = useTodayLayout;
+        if (adapter != null) {
+            adapter.setUseTodayLayout(this.useTodayLayout);
+
+        }
+
+    }
+
+    public void onLocationChanged() {
+        updateWeather();
+        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
     private void updateWeather() {
@@ -141,6 +186,5 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         String location = Utility.getPreferredLocation(getActivity());
         weatherTask.execute(location);
     }
-
 
 }

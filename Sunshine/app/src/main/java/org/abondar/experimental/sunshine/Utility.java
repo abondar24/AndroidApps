@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
+import android.util.Log;
 
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by abondar on 1/14/17.
@@ -40,16 +42,12 @@ public class Utility {
         return context.getString(R.string.format_temperature, temp);
     }
 
-    public static String formatDate(long dateInMillis) {
-        Date date = new Date(dateInMillis);
-        return DateFormat.getDateInstance().format(date);
-    }
+
 
     public static String getFriendlyDayString(Context context, long dateInMillis) {
+
         Time time = new Time();
         time.setToNow();
-
-
         long currentTime = System.currentTimeMillis();
         int julianDay = Time.getJulianDay(dateInMillis, time.gmtoff);
         int currentJulianDay = Time.getJulianDay(currentTime, time.gmtoff);
@@ -61,14 +59,12 @@ public class Utility {
                     formatId,
                     today,
                     getFormattedMonthDay(context, dateInMillis)));
-
         } else if (julianDay < currentJulianDay + 7) {
             return getDayName(context, dateInMillis);
-
         } else {
-            SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
-            return shortenedDateFormat.format(dateInMillis);
+            SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd", Locale.US);
 
+            return shortenedDateFormat.format(dateInMillis);
         }
     }
 

@@ -3,6 +3,7 @@ package org.abondar.experimental.sunshine;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
     private ShareActionProvider shareActionProvider;
 
+
     private static final int DETAIL_LOADER = 0;
     private static final String[] DETAIL_COLUMNS = {
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
@@ -45,11 +47,13 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     private static final int COL_WEATHER_DESC = 2;
     private static final int COL_WEATHER_MAX_TEMP = 3;
     private static final int COL_WEATHER_MIN_TEMP = 4;
+
     public static final int COL_WEATHER_HUMIDITY = 5;
     public static final int COL_WEATHER_PRESSURE = 6;
     public static final int COL_WEATHER_WIND_SPEED = 7;
     public static final int COL_WEATHER_DEGREES = 8;
     public static final int COL_WEATHER_CONDITION_ID = 9;
+    public static final String DETAIL_URI = "URI";
 
     private String forecast;
 
@@ -63,6 +67,8 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     private TextView windView;
     private TextView pressureView;
 
+    private Uri uri;
+
     public DetailsFragment() {
         setHasOptionsMenu(true);
     }
@@ -71,6 +77,11 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        if (args != null) {
+            uri = args.getParcelable(DetailsFragment.DETAIL_URI);
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         iconView = (ImageView) rootView.findViewById(R.id.detail_icon);
         dateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
@@ -100,20 +111,20 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.v(LOG_TAG, "In onCreateLoader");
-        Intent intent = getActivity().getIntent();
-        if (intent == null) {
+
+        if (uri != null) {
+            return new CursorLoader(
+                    getActivity(),
+                    uri,
+                    DETAIL_COLUMNS,
+                    null,
+                    null,
+                    null
+            );
+
+        } else {
             return null;
         }
-
-        return new CursorLoader(
-                getActivity(),
-                intent.getData(),
-                DETAIL_COLUMNS,
-                null,
-                null,
-                null
-        );
     }
 
     @Override
@@ -136,6 +147,8 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
 
             String description = data.getString(COL_WEATHER_DESC);
             descriptionView.setText(description);
+
+            iconView.setContentDescription(description);
 
             boolean isMetric = Utility.isMetric(getActivity());
 
@@ -170,6 +183,16 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
 
     }
 
+    public void onLocationChanged(String newLocation) {
+        Uri uri = this.uri;
+        if (uri != null) {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updateUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+            this.uri = updateUri;
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+        }
+    }
+
     private Intent createShareForecastIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
@@ -177,6 +200,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
         shareIntent.putExtra(Intent.EXTRA_TEXT, forecast + FORECAST_SHARE_HASHTAG);
         return shareIntent;
     }
+
 
 
 }

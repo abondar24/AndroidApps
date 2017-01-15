@@ -7,12 +7,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
-    private final String FORECASTFRAGMENT_TAG = "FFTAG";
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
     private String location;
+    private boolean twoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +21,21 @@ public class MainActivity extends AppCompatActivity {
         location = Utility.getPreferredLocation(this);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment(),FORECASTFRAGMENT_TAG)
-                    .commit();
+        if (findViewById(R.id.weather_detail_container) != null) {
+            twoPane = true;
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.weather_detail_container, new DetailsFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            twoPane = false;
+            getSupportActionBar().setElevation(0f);
         }
+
+        ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_forecast));
+        forecastFragment.setUseTodayLayout(!twoPane);
     }
 
     @Override
@@ -43,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.action_map){
+        if (id == R.id.action_map) {
             openPrefferedLocationMap();
             return true;
         }
@@ -55,12 +66,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         String location = Utility.getPreferredLocation(this);
-        if (location !=null && !this.location.equals(location)){
-            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager()
-                    .findFragmentByTag(FORECASTFRAGMENT_TAG);
+        if (location != null && !location.equals(this.location)) {
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.fragment_forecast);
 
-            if (ff !=null){
+            if (ff != null) {
                 ff.onLocationChanged();
+            }
+
+            DetailsFragment detailsFragment = (DetailsFragment) getSupportFragmentManager()
+                    .findFragmentByTag(DETAILFRAGMENT_TAG);
+            if (detailsFragment != null) {
+                detailsFragment.onLocationChanged(location);
             }
             this.location = location;
         }
@@ -70,16 +87,34 @@ public class MainActivity extends AppCompatActivity {
 
         String location = Utility.getPreferredLocation(this);
 
-        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q",location).build();
+        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q", location).build();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(geoLocation);
 
-        if (intent.resolveActivity(getPackageManager()) != null){
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         } else {
-            Log.e(LOG_TAG,"Couldn't call" + location + ", no receiving apps installed" );
+            Log.e(LOG_TAG, "Couldn't call" + location + ", no receiving apps installed");
         }
     }
 
 
+    @Override
+    public void onItemSelected(Uri contentUri) {
+        if (twoPane) {
+            Bundle args = new Bundle();
+            args.putParcelable(DetailsFragment.DETAIL_URI, contentUri);
+
+            DetailsFragment fragment = new DetailsFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.setData(contentUri);
+            startActivity(intent);
+        }
+    }
 }

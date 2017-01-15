@@ -2,25 +2,43 @@ package org.abondar.experimental.sunshine;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import org.abondar.experimental.sunshine.data.WeatherContract;
+
 
 /**
  * Created by abondar on 1/14/17.
  */
 public class ForecastAdapter extends CursorAdapter {
 
+    public static class ViewHolder {
+        final ImageView iconView;
+        final TextView dateView;
+        final TextView descriptionView;
+        final TextView highTempView;
+        final TextView lowTempView;
+
+        ViewHolder(View view) {
+            iconView = (ImageView) view.findViewById(R.id.list_item_icon);
+            dateView = (TextView) view.findViewById(R.id.list_item_date_textview);
+            descriptionView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
+            highTempView = (TextView) view.findViewById(R.id.list_item_high_textview);
+            lowTempView = (TextView) view.findViewById(R.id.list_item_low_textview);
+        }
+
+    }
     private static final int VIEW_TYPE_TODAY = 0;
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
     private static final int VIEW_TYPE_COUNT = 2;
 
     private Context context;
 
+    private boolean useTodayLayout = true;
 
     ForecastAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
@@ -71,11 +89,13 @@ public class ForecastAdapter extends CursorAdapter {
 
         }
 
-        long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DESC);
+        long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
         viewHolder.dateView.setText(Utility.getFriendlyDayString(context, dateInMillis));
 
         String description = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
         viewHolder.descriptionView.setText(description);
+
+        viewHolder.iconView.setContentDescription(description);
 
         boolean isMetric = Utility.isMetric(context);
 
@@ -90,7 +110,7 @@ public class ForecastAdapter extends CursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return position == 0 ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+        return (position == 0 && this.useTodayLayout) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
     }
 
     @Override
@@ -98,21 +118,8 @@ public class ForecastAdapter extends CursorAdapter {
         return VIEW_TYPE_COUNT;
     }
 
-    public static class ViewHolder {
-        final ImageView iconView;
-        final TextView dateView;
-        final TextView descriptionView;
-        final TextView highTempView;
-        final TextView lowTempView;
-
-        ViewHolder(View view) {
-            iconView = (ImageView) view.findViewById(R.id.list_item_icon);
-            dateView = (TextView) view.findViewById(R.id.list_item_date_textview);
-            descriptionView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
-            highTempView = (TextView) view.findViewById(R.id.list_item_high_textview);
-            lowTempView = (TextView) view.findViewById(R.id.list_item_low_textview);
-        }
-
+    public void setUseTodayLayout(boolean useTodayLayout){
+        this.useTodayLayout =useTodayLayout;
     }
 
 }

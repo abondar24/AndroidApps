@@ -1,6 +1,9 @@
 package org.abondar.experimental.sunshine;
 
+import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.*;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,15 +31,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         }
 
-
-        private void bindPrefSummaryToVal(Preference preference) {
-            preference.setOnPreferenceChangeListener(this);
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
-            String prefString = preferences.getString(preference.getKey(), "");
-            onPreferenceChange(preference, prefString);
-        }
-
-
         @Override
         public boolean onPreferenceChange(Preference preference, Object val) {
             String stringVal = val.toString();
@@ -55,6 +49,21 @@ public class SettingsActivity extends AppCompatActivity {
 
             return true;
         }
+
+
+        private void bindPrefSummaryToVal(Preference preference) {
+            preference.setOnPreferenceChangeListener(this);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
+            String prefString = preferences.getString(preference.getKey(), "");
+            onPreferenceChange(preference, prefString);
+        }
+
+    }
+
+    //restore fragment when back to main
+    @Override
+    public Intent getParentActivityIntent() {
+        return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
 }
 
