@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import org.abondar.experimental.sunshine.FetchWeatherTask;
 import org.abondar.experimental.sunshine.data.WeatherContract;
 import org.junit.Test;
 import org.junit.runner.RunWith;
