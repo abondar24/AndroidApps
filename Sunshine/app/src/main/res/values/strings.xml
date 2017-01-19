@@ -19,6 +19,11 @@
     <string name="settings_enable_notifications_true">Enabled</string>
     <string name="settings_enable_notifications_false">Not Enabled</string>
     <string name="settings_enable_notifications_default" translatable="false">true</string>
+    <string name="settings_daily_notifications_key" translatable="false">daily_notifications</string>
+    <string name="settings_daily_notifications_label">Daily Notifications</string>
+    <string name="settings_daily_notifications_true">Enabled</string>
+    <string name="settings_daily_notifications_false">Notify on every update</string>
+    <string name="settings_daily_notifications_default" translatable="false">true</string>
     <string name="action_map">Map Location</string>
     <string name="action_share">Share</string>
     <string name="today">Today</string>

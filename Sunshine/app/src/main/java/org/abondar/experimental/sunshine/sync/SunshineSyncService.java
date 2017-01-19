@@ -9,15 +9,15 @@ import android.util.Log;
  * Created by abondar on 1/15/17.
  */
 public class SunshineSyncService extends Service {
-    private static final Object sSyncAdapterLock = new Object();
-    private static SunshineSyncAdapter sSunshineSyncAdapter = null;
+    private static final Object syncAdapterLock = new Object();
+    private static SunshineSyncAdapter sunshineSyncAdapter = null;
 
     @Override
     public void onCreate() {
         Log.d("SunshineSyncService", "onCreate - SunshineSyncService");
-        synchronized (sSyncAdapterLock) {
-            if (sSunshineSyncAdapter == null) {
-                sSunshineSyncAdapter = new SunshineSyncAdapter(getApplicationContext(), true);
+        synchronized (syncAdapterLock) {
+            if (sunshineSyncAdapter == null) {
+                sunshineSyncAdapter = new SunshineSyncAdapter(getApplicationContext(), true);
 
             }
 
@@ -27,6 +27,6 @@ public class SunshineSyncService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return sSunshineSyncAdapter.getSyncAdapterBinder();
+        return sunshineSyncAdapter.getSyncAdapterBinder();
     }
 }

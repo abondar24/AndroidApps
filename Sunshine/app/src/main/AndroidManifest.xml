@@ -42,7 +42,8 @@
         <provider
                 android:authorities="@string/content_authority"
                 android:name=".data.WeatherProvider"
-                android:syncable="true"/>
+                android:syncable="true"
+                android:exported="false"/>
 
         <service android:name=".sync.SunshineAuthenticatorService">
             <intent-filter>
@@ -54,15 +55,13 @@
         </service>
         <service android:name=".sync.SunshineSyncService"
                  android:exported="true">
-
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
-
             <meta-data android:name="android.content.SyncAdapter"
                        android:resource="@xml/syncadapter"/>
-
         </service>
+
     </application>
 
 </manifest>

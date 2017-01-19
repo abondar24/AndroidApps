@@ -8,7 +8,7 @@ import android.os.IBinder;
  * Created by abondar on 1/15/17.
  */
 public class SunshineAuthenticatorService extends Service {
-    public SunshineAuthenticator authenticator;
+    private SunshineAuthenticator authenticator;
 
     @Override
     public void onCreate() {
