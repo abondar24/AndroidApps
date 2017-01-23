@@ -145,30 +145,37 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
             friendlyDateView.setText(friendlyDateText);
             dateView.setText(dateText);
 
-            String description = data.getString(COL_WEATHER_DESC);
+            String description = Utility.getStringForWeatherCondition(getActivity(), weatherId);
             descriptionView.setText(description);
+            descriptionView.setContentDescription(getString(R.string.a11y_forecast,description));
 
             iconView.setContentDescription(description);
+            iconView.setContentDescription(getString(R.string.a11y_forecast_icon,description));
 
             boolean isMetric = Utility.isMetric(getActivity());
 
             double high = data.getDouble(COL_WEATHER_MAX_TEMP);
             String highString = Utility.formatTemperature(getActivity(), high);
             highTempView.setText(highString);
+            highTempView.setContentDescription(getString(R.string.a11y_high_temp, highString));
 
             double low = data.getDouble(COL_WEATHER_MIN_TEMP);
             String lowString = Utility.formatTemperature(getActivity(), low);
             lowTempView.setText(lowString);
+            lowTempView.setContentDescription(getString(R.string.a11y_low_temp, lowString));
 
             float humidity = data.getFloat(COL_WEATHER_HUMIDITY);
             humidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
+            humidityView.setContentDescription(humidityView.getText());
 
             float windSpeedStr = data.getFloat(COL_WEATHER_WIND_SPEED);
             float windDirStr = data.getFloat(COL_WEATHER_DEGREES);
             windView.setText(Utility.getFormattedWind(getActivity(), windSpeedStr, windDirStr));
+            windView.setContentDescription(windView.getText());
 
             float pressure = data.getFloat(COL_WEATHER_PRESSURE);
             pressureView.setText(getActivity().getString(R.string.format_pressure, pressure));
+            pressureView.setContentDescription(pressureView.getText());
 
             forecast = String.format("%s - %s : %s/%s", dateText, description, high, low);
 
