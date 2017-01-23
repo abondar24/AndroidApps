@@ -2,9 +2,13 @@ package org.abondar.experimental.sunshine;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.util.Log;
+import org.abondar.experimental.sunshine.sync.SunshineSyncAdapter;
 
 
 import java.text.DateFormat;
@@ -188,5 +192,31 @@ public class Utility {
             return R.drawable.ic_cloudy;
         }
         return -1;
+    }
+
+
+    public static boolean isNetworkAvailable(Context context){
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activceNetwork = connectivityManager.getActiveNetworkInfo();
+
+        return activceNetwork != null && activceNetwork.isConnectedOrConnecting();
+    }
+
+    @SuppressWarnings("ResourceType")
+    public static @SunshineSyncAdapter.LocationStatus
+    int getLocationStatus(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getInt(context.getString(R.string.settings_location_status_key),
+                SunshineSyncAdapter.LOCATION_STATUS_UNKNOWN);
+    }
+
+    public static void resetLocationStatus(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(context.getString(R.string.settings_location_status_key),
+                SunshineSyncAdapter.LOCATION_STATUS_UNKNOWN);
+        editor.apply();
     }
 }

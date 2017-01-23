@@ -7,6 +7,7 @@
     <string name="settings_location_label">Location</string>
     <string name="settings_location_key" translatable="false">location</string>
     <string name="settings_location_default" translatable="false">95134</string>
+    <string name="settings_location_status_key" translatable="false">loc-status</string>
     <string name="settings_units_label">Temperature Units</string>
     <string name="settings_units_label_metric">Metric</string>
     <string name="settings_units_label_imperial">Imperial</string>
@@ -24,18 +25,44 @@
     <string name="settings_daily_notifications_true">Enabled</string>
     <string name="settings_daily_notifications_false">Notify on every update</string>
     <string name="settings_daily_notifications_default" translatable="false">true</string>
+    <string name="settings_location_error_description">Invalid Location (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
+    <string name="settings_location_unknown_description">Validating Location… (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
     <string name="action_map">Map Location</string>
     <string name="action_share">Share</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
-    <string name="format_full_friendly_date"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
-    <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
-    <string name="format_wind_mph">Wind: <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g></string>
-    <string name="format_wind_kmh">Wind: <xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g></string>
-    <string name="format_pressure">Pressure: <xliff:g id="pressure">%1.0f</xliff:g> hPa</string>
-    <string name="format_humidity">Humidity: <xliff:g id="humidity">%1.0f</xliff:g> %%</string>
-    <string name="format_notification">Forecast: <xliff:g id="condition">%1$s</xliff:g> High: <xliff:g id="high">%2$s</xliff:g> Low: <xliff:g id="low">%3$s</xliff:g></string>
+    <string name="format_full_friendly_date"><xliff:g id="month">%1$s</xliff:g>,
+        <xliff:g id="day">%2$s</xliff:g>
+    </string>
+    <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0
+    </string>
+    <string name="format_wind_mph">Wind: <xliff:g id="speed">%1$1.0f</xliff:g> mph
+        <xliff:g id="direction">%2$s</xliff:g>
+    </string>
+    <string name="format_wind_kmh">Wind: <xliff:g id="speed">%1$1.0f</xliff:g> km/h
+        <xliff:g id="direction">%2$s</xliff:g>
+    </string>
+    <string name="format_pressure">Pressure: <xliff:g id="pressure">%1.0f</xliff:g> hPa
+    </string>
+    <string name="format_humidity">Humidity: <xliff:g id="humidity">%1.0f</xliff:g> %%
+    </string>
+    <string name="format_notification">Forecast: <xliff:g id="condition">%1$s</xliff:g> High: <xliff:g id="high">%2$s
+    </xliff:g> Low:
+        <xliff:g id="low">%3$s</xliff:g>
+    </string>
     <string name="sync_account_type">sunshine.abondar.com</string>
     <string name="content_authority">org.abondar.experimental.sunshine</string>
+    <string name="empty_forecast_list">No weather Information Available</string>
+    <string name="empty_forecast_list_no_network">No weather Information Available.
+        The network is not available to fetch data
+    </string>
+    <string name="empty_forecast_list_server_down">No weather information available. The server is not returning data.
+    </string>
+    <string name="empty_forecast_list_server_error">No weather information available. The server is not returning valid
+        data. Please check for an updated version of Sunshine.
+    </string>
+    <string name="empty_forecast_list_invalid_location">No weather information available.
+        The location in settings is not recognized by the weather server.</string>
+
 
 </resources>

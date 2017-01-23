@@ -5,9 +5,11 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -17,6 +19,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import org.abondar.experimental.sunshine.data.WeatherContract;
 import org.abondar.experimental.sunshine.sync.SunshineSyncAdapter;
 
@@ -24,8 +27,11 @@ import org.abondar.experimental.sunshine.sync.SunshineSyncAdapter;
 /**
  * Created by abondar on 1/7/17.
  */
-public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
+
+
     public interface Callback {
         void onItemSelected(Uri dataUri);
     }
@@ -73,6 +79,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         adapter = new ForecastAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View emptyView = rootView.findViewById(R.id.listview_forecast_empty);
+
         listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -91,12 +99,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 position = pos;
             }
         });
+        listView.setEmptyView(emptyView);
 
-        // If there's instance state, mine it for useful information.
-        // The end-goal here is that the user never knows that turning their device sideways
-        // does crazy lifecycle related things.  It should feel like some stuff stretched out,
-        // or magically appeared to take advantage of room, but data or place in the app was never
-        // actually *lost*.
         if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
             position = savedInstanceState.getInt(SELECTED_KEY);
         }
@@ -131,9 +135,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // When tablets rotate, the currently selected list item needs to be saved.
-        // When no item is selected, position will be set to Listview.INVALID_POSITION,
-        // so check for that before storing.
         if (position != ListView.INVALID_POSITION) {
             outState.putInt(SELECTED_KEY, position);
         }
@@ -165,11 +166,33 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         if (position != ListView.INVALID_POSITION) {
             listView.smoothScrollToPosition(position);
         }
+        updateEmptyView();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+             if (key.equals(getString(R.string.settings_location_status_key))){
+                 updateEmptyView();
+             }
+    }
+
+    @Override
+    public void onResume() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        preferences.registerOnSharedPreferenceChangeListener(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        preferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {
@@ -180,6 +203,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
     }
+
 
     public void onLocationChanged() {
         updateWeather();
@@ -217,5 +241,31 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     }
 
+    private void updateEmptyView(){
+        if (adapter.getCount() == 0 ){
+            TextView textView = (TextView) getView().findViewById(R.id.listview_forecast_empty);
+            if(textView != null){
+                int msg  = R.string.empty_forecast_list;
+
+                @SunshineSyncAdapter.LocationStatus int location = Utility.getLocationStatus(getActivity());
+                switch (location){
+                    case SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
+                        msg = R.string.empty_forecast_list_server_down;
+                        break;
+                    case SunshineSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
+                        msg = R.string.empty_forecast_list_server_error;
+                        break;
+                    case SunshineSyncAdapter.LOCATION_STATUS_INVALID:
+                        msg = R.string.empty_forecast_list_invalid_location;
+                        break;
+                    default:
+                        if (!Utility.isNetworkAvailable(getActivity())){
+                            msg = R.string.empty_forecast_list_no_network;
+                        }
+                }
+                textView.setText(msg);
+            }
+        }
+    }
 
 }

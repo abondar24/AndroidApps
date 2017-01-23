@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:custom="http://schemas.android.com/apk/lib/org.abondar.experimental.sunshine"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent">
+
+    <org.abondar.experimental.sunshine.LocationEditTextPreference
             android:title="@string/settings_location_label"
             android:key="@string/settings_location_key"
             android:defaultValue="@string/settings_location_default"
             android:inputType="text"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            custom:minLength="3"/>
 
     <ListPreference
             android:title="@string/settings_units_label"
