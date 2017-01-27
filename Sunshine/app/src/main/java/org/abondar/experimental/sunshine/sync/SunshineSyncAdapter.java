@@ -47,7 +47,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     //3 hours
     public static final int SYNC_INTERVAL = 60 * 180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
-    private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     private static final int WEATHER_NOTIFICATION_ID = 3004;
 
     private static final String[] NOTIFY_WEATHER_PROJECTION = new String[]{
@@ -64,9 +63,10 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
 
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({LOCATION_STATUS_OK,LOCATION_STATUS_SERVER_DOWN,
-            LOCATION_STATUS_SERVER_INVALID,LOCATION_STATUS_UNKNOWN,LOCATION_STATUS_INVALID})
-    public @interface LocationStatus{}
+    @IntDef({LOCATION_STATUS_OK, LOCATION_STATUS_SERVER_DOWN,
+            LOCATION_STATUS_SERVER_INVALID, LOCATION_STATUS_UNKNOWN, LOCATION_STATUS_INVALID})
+    public @interface LocationStatus {
+    }
 
 
     public static final int LOCATION_STATUS_OK = 0;
@@ -133,7 +133,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             if (sb.length() == 0) {
-               setLocationStatus(getContext(),LOCATION_STATUS_SERVER_DOWN);
+                setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
                 return;
             }
 
@@ -142,11 +142,11 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error", e);
-            setLocationStatus(getContext(),LOCATION_STATUS_INVALID);
+            setLocationStatus(getContext(), LOCATION_STATUS_INVALID);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
-            setLocationStatus(getContext(),LOCATION_STATUS_SERVER_INVALID);
+            setLocationStatus(getContext(), LOCATION_STATUS_SERVER_INVALID);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -255,7 +255,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         JSONObject forecastJson = new JSONObject(forecast);
 
-        if (forecastJson.has(OWM_MESSAGE_CODE)){
+        if (forecastJson.has(OWM_MESSAGE_CODE)) {
             int errorCode = forecastJson.getInt(OWM_MESSAGE_CODE);
             switch (errorCode) {
                 case HttpURLConnection.HTTP_OK:
@@ -264,7 +264,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     setLocationStatus(getContext(), LOCATION_STATUS_INVALID);
                     return;
                 default:
-                    setLocationStatus(getContext(),LOCATION_STATUS_SERVER_DOWN);
+                    setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
                     return;
             }
         }
@@ -354,7 +354,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         Date resultdate = new Date(time);
         Log.i(LOG_TAG, "Sync Complete. " + cvv.size() + " Inserted" + " Time: " + sdf.format(resultdate));
-        setLocationStatus(getContext(),LOCATION_STATUS_OK);
+        setLocationStatus(getContext(), LOCATION_STATUS_OK);
 
     }
 
@@ -376,10 +376,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         boolean displayNotifications = prefs.getBoolean(displayNotificationsKey,
                 Boolean.parseBoolean(context.getString(R.string.settings_enable_notifications_default)));
 
-        String dailyNotificationsKey = context.getString(R.string.settings_daily_notifications_key);
-        boolean dailyNotifications = prefs.getBoolean(dailyNotificationsKey,
-                Boolean.parseBoolean(context.getString(R.string.settings_daily_notifications_default)));
-
 
         if (displayNotifications) {
 
@@ -393,15 +389,41 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             Cursor cursor = context.getContentResolver().query(weatherUri, NOTIFY_WEATHER_PROJECTION,
                     null, null, null);
 
+            if (cursor.moveToFirst()) {
+                int weatherId = cursor.getInt(INDEX_WEATHER_ID);
+                double high = cursor.getDouble(INDEX_MAX_TEMP);
+                double low = cursor.getDouble(INDEX_MIN_TEMP);
+                String desc = cursor.getString(INDEX_SHORT_DESC);
 
+                int iconId = Utility.getIconResourceForWeatherCondition(weatherId);
+                Resources resources = context.getResources();
+                Bitmap largeIcon = BitmapFactory.decodeResource(resources,
+                        Utility.getArtResourceForWeatherCondition(weatherId));
+                String title = context.getString(R.string.app_name);
+                String contentText = String.format(context.getString(R.string.format_notification),
+                        desc,
+                        Utility.formatTemperature(context, high),
+                        Utility.formatTemperature(context, low));
 
-            if (dailyNotifications){
-                long lastSync = prefs.getLong(lastNotificationKey, 0);
-                if (System.currentTimeMillis() - lastSync >= DAY_IN_MILLIS) {
-                    show(cursor,context);
-                }
-            } else {
-                show(cursor,context);
+                Notification.Builder builder =
+                        new Notification.Builder(getContext())
+                                .setColor(resources.getColor(R.color.primary_light))
+                                .setSmallIcon(iconId)
+                                .setLargeIcon(largeIcon)
+                                .setContentTitle(title)
+                                .setContentText(contentText);
+
+                Intent resultIntent = new Intent(context, MainActivity.class);
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                stackBuilder.addNextIntent(resultIntent);
+                PendingIntent resultPendingIntent =
+                        stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                builder.setContentIntent(resultPendingIntent);
+                NotificationManager notificationManager = (NotificationManager) getContext()
+                        .getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(WEATHER_NOTIFICATION_ID, builder.build());
+
             }
 
             SharedPreferences.Editor editor = prefs.edit();
@@ -412,48 +434,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
     }
 
-    private void show(Cursor cursor, Context context) {
-
-
-        if (cursor.moveToFirst()) {
-            int weatherId = cursor.getInt(INDEX_WEATHER_ID);
-            double high = cursor.getDouble(INDEX_MAX_TEMP);
-            double low = cursor.getDouble(INDEX_MIN_TEMP);
-            String desc = cursor.getString(INDEX_SHORT_DESC);
-
-            int iconId = Utility.getIconResourceForWeatherCondition(weatherId);
-            Resources resources = context.getResources();
-            Bitmap largeIcon = BitmapFactory.decodeResource(resources,
-                    Utility.getArtResourceForWeatherCondition(weatherId));
-            String title = context.getString(R.string.app_name);
-            String contentText = String.format(context.getString(R.string.format_notification),
-                    desc,
-                    Utility.formatTemperature(context, high),
-                    Utility.formatTemperature(context, low));
-            Notification.Builder builder =
-                    new Notification.Builder(getContext())
-                            .setColor(resources.getColor(R.color.sunshine_light_blue))
-                            .setSmallIcon(iconId)
-                            .setLargeIcon(largeIcon)
-                            .setContentTitle(title)
-                            .setContentText(contentText);
-
-            Intent resultIntent = new Intent(context, MainActivity.class);
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent =
-                    stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            builder.setContentIntent(resultPendingIntent);
-            NotificationManager notificationManager = (NotificationManager) getContext()
-                    .getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(WEATHER_NOTIFICATION_ID, builder.build());
-
-
-        }
-    }
-
-    private static void setLocationStatus(Context context, @LocationStatus int status){
+    private static void setLocationStatus(Context context, @LocationStatus int status) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(context.getString(R.string.settings_location_status_key), status);

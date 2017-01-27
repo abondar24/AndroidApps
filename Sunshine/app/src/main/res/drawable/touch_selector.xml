@@ -6,11 +6,25 @@
 
 
     <item android:state_pressed="true">
-        <ripple android:color="@color/grey" />
+        <ripple android:color="@color/grey"/>
     </item>
 
     <item android:state_activated="true"
-          android:drawable="@color/sunshine_light_blue" />
+          android:drawable="@color/activated"/>
 
-    <item android:drawable="@android:color/transparent" />
+
+    <item android:state_window_focused="false" android:drawable="@color/background_material_light"/>
+
+    <item android:state_focused="true" android:state_enabled="false" android:state_pressed="true"
+          android:drawable="@drawable/abc_list_selector_holo_light"/>
+    <item android:state_focused="true" android:state_enabled="false"
+          android:drawable="@drawable/abc_list_selector_holo_light"/>
+    <item android:state_focused="true" android:state_pressed="true"
+          android:drawable="@drawable/abc_list_selector_holo_light"/>
+    <item android:state_focused="false" android:state_pressed="true"
+          android:drawable="@drawable/abc_list_selector_holo_light"/>
+    <item android:state_focused="true" android:drawable="@drawable/abc_list_selector_holo_light"/>
+
+
+    <item android:drawable="@color/background_material_light"/>
 </selector>

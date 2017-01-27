@@ -20,11 +20,6 @@
     <string name="settings_enable_notifications_true">Enabled</string>
     <string name="settings_enable_notifications_false">Not Enabled</string>
     <string name="settings_enable_notifications_default" translatable="false">true</string>
-    <string name="settings_daily_notifications_key" translatable="false">daily_notifications</string>
-    <string name="settings_daily_notifications_label">Daily Notifications</string>
-    <string name="settings_daily_notifications_true">Enabled</string>
-    <string name="settings_daily_notifications_false">Notify on every update</string>
-    <string name="settings_daily_notifications_default" translatable="false">true</string>
     <string name="settings_location_error_description">Invalid Location (<xliff:g id="location_setting">%1$s</xliff:g>)"
     </string>
     <string name="settings_location_unknown_description">Validating Location… (<xliff:g id="location_setting">
@@ -34,20 +29,31 @@
     <string name="action_share">Share</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
+    <string name="wind">Wind</string>
+    <string name="pressure">Pressure</string>
+    <string name="humidity">Humidity</string>
     <string name="format_full_friendly_date"><xliff:g id="month">%1$s</xliff:g>,
         <xliff:g id="day">%2$s</xliff:g>
     </string>
     <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0
     </string>
-    <string name="format_wind_mph">Wind: <xliff:g id="speed">%1$1.0f</xliff:g> mph
+    <string name="format_wind_mph">
+        <xliff:g id="speed">%1$1.0f</xliff:g>
+        mph
         <xliff:g id="direction">%2$s</xliff:g>
     </string>
-    <string name="format_wind_kmh">Wind: <xliff:g id="speed">%1$1.0f</xliff:g> km/h
+    <string name="format_wind_kmh">
+        <xliff:g id="speed">%1$1.0f</xliff:g>
+        km/h
         <xliff:g id="direction">%2$s</xliff:g>
     </string>
-    <string name="format_pressure">Pressure: <xliff:g id="pressure">%1.0f</xliff:g> hPa
+    <string name="format_pressure">
+        <xliff:g id="pressure">%1.0f</xliff:g>
+        hPa
     </string>
-    <string name="format_humidity">Humidity: <xliff:g id="humidity">%1.0f</xliff:g> %%
+    <string name="format_humidity">
+        <xliff:g id="humidity">%1.0f</xliff:g>
+        %%
     </string>
     <string name="format_notification">Forecast: <xliff:g id="condition">%1$s</xliff:g> High: <xliff:g id="high">%2$s
     </xliff:g> Low:
@@ -78,6 +84,15 @@
     </string>
     <string name="a11y_low_temp">Low:
         <xliff:g id="low">%1$s</xliff:g>
+    </string>
+    <string name="a11y_humidity">Humidity:
+        <xliff:g id="humidity">%1$s</xliff:g>
+    </string>
+    <string name="a11y_pressure">Barometric Pressure:
+        <xliff:g id="pressure">%1$s</xliff:g>
+    </string>
+    <string name="a11y_wind">Wind speed and direction:
+        <xliff:g id="wind">%1$s</xliff:g>
     </string>
     <string name="condition_2xx">Storm</string>
     <string name="condition_3xx">Drizzle</string>
@@ -135,6 +150,11 @@
     <string name="condition_960">Storm</string>
     <string name="condition_961">Violent Storm</string>
     <string name="condition_962">Hurricane</string>
-    <string name="condition_unknown">Unknown (<xliff:g id="low">%1$s</xliff:g>)</string>
-
+    <string name="condition_unknown">Unknown (<xliff:g id="low">%1$s</xliff:g>)
+    </string>
+    <string name="format_art_url" translatable="false">
+        https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-xxhdpi/art_
+        <xliff:g id="description">%s</xliff:g>.png
+    </string>
+    <string name="detail_icon_transition_name" translatable="false">TN_DetailIcon</string>
 </resources>

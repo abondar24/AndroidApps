@@ -26,12 +26,5 @@
             android:summaryOn="@string/settings_enable_notifications_true"
             android:defaultValue="@string/settings_enable_notifications_default"/>
 
-    <CheckBoxPreference
-            android:title="@string/settings_daily_notifications_label"
-            android:key="@string/settings_daily_notifications_key"
-            android:summaryOff="@string/settings_daily_notifications_false"
-            android:summaryOn="@string/settings_daily_notifications_true"
-            android:defaultValue="@string/settings_daily_notifications_default"/>
-
 
 </PreferenceScreen>

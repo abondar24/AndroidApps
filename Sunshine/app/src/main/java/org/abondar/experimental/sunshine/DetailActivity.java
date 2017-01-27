@@ -1,10 +1,8 @@
 package org.abondar.experimental.sunshine;
 
-import android.content.Intent;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -12,36 +10,20 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
         if (savedInstanceState == null){
             Bundle args = new Bundle();
-            args.putParcelable(DetailsFragment.DETAIL_URI,getIntent().getData());
+            args.putParcelable(DetailFragment.DETAIL_URI,getIntent().getData());
+            args.putBoolean(DetailFragment.DETAIL_TRANSITION_ANIMATION,true);
 
-            DetailsFragment fragment = new DetailsFragment();
+            DetailFragment fragment = new DetailFragment();
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.weather_detail_container, fragment)
                     .commit();
+
+            supportPostponeEnterTransition();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.detail,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id==R.id.action_settings){
-            Intent intent = new Intent(this,SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 

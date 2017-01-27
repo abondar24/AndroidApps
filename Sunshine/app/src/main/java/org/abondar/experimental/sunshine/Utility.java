@@ -394,4 +394,14 @@ public class Utility {
         return context.getString(stringId);
 
     }
+
+    public static String getFullFriendlyDayString(Context context, long dateInMillis) {
+        String day = getDayName(context, dateInMillis);
+        int formatId = R.string.format_full_friendly_date;
+        return String.format(context.getString(
+                formatId,
+                day,
+                getFormattedMonthDay(context, dateInMillis)));
+
+    }
 }
