@@ -21,6 +21,7 @@ import java.util.Locale;
  */
 public class Utility {
     public static final String DATE_FORMAT = "yyyyMMdd";
+    public static float DEFAULT_LATLONG = 0F;
 
 
     public static String getPreferredLocation(Context context) {
@@ -404,4 +405,23 @@ public class Utility {
                 getFormattedMonthDay(context, dateInMillis)));
 
     }
+
+    public static boolean isLocationLatLonAvailable(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.contains(context.getString(R.string.settings_location_latitude))
+                && preferences.contains(context.getString(R.string.settings_location_longitude));
+
+    }
+
+    public static float getLocationLatitude(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getFloat(context.getString(R.string.settings_location_latitude), DEFAULT_LATLONG);
+
+    }
+
+    public static float getLocationLongitude(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+         return preferences.getFloat(context.getString(R.string.settings_location_longitude), DEFAULT_LATLONG);
+    }
+
 }

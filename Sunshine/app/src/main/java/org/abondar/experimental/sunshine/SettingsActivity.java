@@ -1,17 +1,24 @@
 package org.abondar.experimental.sunshine;
 
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.*;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import org.abondar.experimental.sunshine.data.WeatherContract;
 import org.abondar.experimental.sunshine.sync.SunshineSyncAdapter;
+import com.google.android.gms.location.places.Place;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    protected final static int PLACE_PICKER_REQUEST = 9090;
+    private SunshinePreferencesFragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +29,52 @@ public class SettingsActivity extends AppCompatActivity {
     public Intent getParentActivityIntent() {
         return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        if (fragment instanceof SunshinePreferencesFragment){
+            this.fragment = ((SunshinePreferencesFragment) fragment);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data,this);
+                String address = place.getAddress().toString();
+
+                LatLng latLong = place.getLatLng();
+                if (TextUtils.isEmpty(address)) {
+                    address = String.format("(%.2f, %.2f)", latLong.latitude, latLong.longitude);
+                }
+
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(getString(R.string.settings_location_key), address);
+                editor.putFloat(getString(R.string.settings_location_latitude), (float) latLong.latitude);
+                editor.putFloat(getString(R.string.settings_location_longitude), (float) latLong.longitude);
+                editor.commit();
+
+                Preference locationPreference = fragment.findPreference(getString(R.string.settings_location_key));
+                fragment.setPreferenceSummary(locationPreference, address);
+
+
+                Utility.resetLocationStatus(this);
+                SunshineSyncAdapter.syncImmediately(this);
+
+            }
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+
+        }
+    }
+
 
     public static class SunshinePreferencesFragment extends PreferenceFragment
             implements Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -37,15 +90,25 @@ public class SettingsActivity extends AppCompatActivity {
             Preference units = findPreference(getString(R.string.settings_units_key));
             bindPrefSummaryToVal(units);
 
+
         }
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals("location")) {
+            if (key.equals(getString(R.string.settings_location_key))) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove(getString(R.string.settings_location_latitude));
+                editor.remove(getString(R.string.settings_location_longitude));
+                editor.commit();
+
+
                 Utility.resetLocationStatus(getActivity());
                 SunshineSyncAdapter.syncImmediately(getActivity());
-            } else if (key.equals("units")) {
-                getActivity().getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
+            } else if (key.equals(getString(R.string.settings_units_key))) {
+                getContext().getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
+            } else if (key.equals(getString(R.string.settings_location_status_key))) {
+                Preference locationPreference = findPreference(getString(R.string.settings_location_key));
+                bindPrefSummaryToVal(locationPreference);
             }
         }
 
@@ -82,11 +145,21 @@ public class SettingsActivity extends AppCompatActivity {
             return true;
         }
 
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            Log.i("ss1", "asdasdasd");
+
+
+            Log.i("ss1", "hui");
+
+        }
+
+
         private void bindPrefSummaryToVal(Preference preference) {
             preference.setOnPreferenceChangeListener(this);
-            setPreferenceSummary(preference,PreferenceManager
-            .getDefaultSharedPreferences(preference.getContext())
-            .getString(preference.getKey(),""));
+            setPreferenceSummary(preference, PreferenceManager
+                    .getDefaultSharedPreferences(preference.getContext())
+                    .getString(preference.getKey(), ""));
 
         }
 
