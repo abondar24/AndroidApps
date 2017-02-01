@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
+import org.abondar.experimental.sunshine.data.WeatherContract;
 import org.abondar.experimental.sunshine.sync.SunshineSyncAdapter;
 
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         location = Utility.getPreferredLocation(this);
+        Uri contentUri = getIntent() != null ? getIntent().getData() : null;
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -31,20 +33,29 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         if (findViewById(R.id.weather_detail_container) != null) {
             twoPane = true;
             if (savedInstanceState == null) {
+                DetailFragment fragment = new DetailFragment();
+                if (contentUri != null) {
+                    Bundle args = new Bundle();
+                    args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
+                    fragment.setArguments(args);
+                }
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.weather_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
                         .commit();
+            } else {
+                twoPane = false;
+                getSupportActionBar().setElevation(0f);
             }
-        } else {
-            twoPane = false;
-            getSupportActionBar().setElevation(0f);
+
+            ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.fragment_forecast));
+            forecastFragment.setUseTodayLayout(!twoPane);
+             if (contentUri != null) {
+                forecastFragment.setInitialSelectedDate(
+                        WeatherContract.WeatherEntry.getDateFromUri(contentUri));
+            }
+            SunshineSyncAdapter.initializeSyncAdapter(this);
         }
-
-        ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_forecast));
-        forecastFragment.setUseTodayLayout(!twoPane);
-
-        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
@@ -105,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             Intent intent = new Intent(this, DetailActivity.class);
             intent.setData(contentUri);
             ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-                    new Pair<View, String>(viewHolder.iconView,getString(R.string.detail_icon_transition_name)));
+                    new Pair<View, String>(viewHolder.iconView, getString(R.string.detail_icon_transition_name)));
             ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
         }
     }

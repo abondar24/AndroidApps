@@ -43,6 +43,7 @@ import java.util.Vector;
  */
 public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public final String LOG_TAG = SunshineSyncAdapter.class.getSimpleName();
+    public static final String ACTION_DATA_UPDATED = "org.abondar.experimental.sunshine.ACTION_DATA_UPDATED";
 
     //3 hours
     public static final int SYNC_INTERVAL = 60 * 180;
@@ -363,7 +364,10 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 WeatherContract.WeatherEntry.COLUMN_DATE + " <= ?",
                 new String[]{Long.toString(dayTime.setJulianDay(julianStartDay - 1))});
 
+
+        updateWidgets();
         notifyWeather();
+
         long time = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
 
@@ -454,5 +458,11 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(context.getString(R.string.settings_location_status_key), status);
         editor.commit();
+    }
+
+    private void updateWidgets(){
+        Context context = getContext();
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
     }
 }

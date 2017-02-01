@@ -45,7 +45,7 @@ public class Utility {
         return String.format(context.getString(R.string.format_temperature), temperature);
     }
 
-    public static String getFriendlyDayString(Context context, long dateInMillis) {
+    public static String getFriendlyDayString(Context context, long dateInMillis,boolean displayLongToday) {
 
         Time time = new Time();
         time.setToNow();
@@ -53,7 +53,7 @@ public class Utility {
         int julianDay = Time.getJulianDay(dateInMillis, time.gmtoff);
         int currentJulianDay = Time.getJulianDay(currentTime, time.gmtoff);
 
-        if (julianDay == currentJulianDay) {
+        if (displayLongToday && julianDay == currentJulianDay) {
             String today = context.getString(R.string.today);
             int formatId = R.string.format_full_friendly_date;
             return String.format(context.getString(
