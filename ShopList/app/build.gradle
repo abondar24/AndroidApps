@@ -1,0 +1,22 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        applicationId "alex.shoplist"
+        minSdkVersion 14
+        targetSdkVersion 17
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+            compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.2.3'
+
+        }
+    }
+}
